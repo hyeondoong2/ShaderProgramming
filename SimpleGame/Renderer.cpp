@@ -19,7 +19,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	
+
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -47,21 +47,34 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
-	// lecture2 - 2025.9.8
-	float test[]
+	// lecture2, 3
+	float testPos[]
 		=
 	{
-		0.f, 0.f, 0.f, 
-		1.f, 0.f, 0.f, 
+		0.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
 		1.f, 1.f, 0.f, //Triangle1
-
 	};
 
 	GLuint testID;
-	glGenBuffers(1, &m_VBOTest);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTest);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(test), test, GL_STATIC_DRAW);
+	glGenBuffers(1, &m_VBOTestPos);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(testPos),
+		testPos, GL_STATIC_DRAW);
 
+
+	float testColor[]
+		=
+	{
+		1.f, 0.f, 0.f, 1.f,
+		0.f, 1.f, 0.f, 1.f,
+		0.f, 0.f, 1.f, 1.f,//Triangle1
+	};
+
+	glGenBuffers(1, &m_VBOTestColor);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(testColor),
+		testColor, GL_STATIC_DRAW);
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -106,7 +119,7 @@ void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum S
 	glAttachShader(ShaderProgram, ShaderObj);
 }
 
-bool Renderer::ReadFile(char* filename, std::string *target)
+bool Renderer::ReadFile(char* filename, std::string* target)
 {
 	std::ifstream file(filename);
 	if (file.fail())
@@ -209,20 +222,39 @@ void Renderer::DrawTest()
 {
 	//Program select
 	glUseProgram(m_SolidRectShader);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), 0, 0, 0, 1);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), 1, 1, 1, 1);
-	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
-	glEnableVertexAttribArray(attribPosition);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTest);
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT,
+
+	glUniform4f(glGetUniformLocation(m_SolidRectShader,
+		"u_Trans"),
+		0, 0, 0, 1);
+	glUniform4f(glGetUniformLocation(m_SolidRectShader,
+		"u_Color"),
+		1, 1, 1, 1);
+
+	int aPosLoc = glGetAttribLocation(m_SolidRectShader,
+		"a_Position");
+	int aColLoc = glGetAttribLocation(m_SolidRectShader,
+		"a_Color");
+
+	glEnableVertexAttribArray(aPosLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
+	glVertexAttribPointer(
+		aPosLoc, 3, GL_FLOAT,
 		GL_FALSE, sizeof(float) * 3, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glDisableVertexAttribArray(attribPosition);
+
+	glEnableVertexAttribArray(aColLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
+	glVertexAttribPointer(
+		aColLoc, 4, GL_FLOAT,
+		GL_FALSE, sizeof(float) * 4, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	glDisableVertexAttribArray(aPosLoc);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
-void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
+void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
 {
 	*newX = x * 2.f / m_WindowSizeX;
 	*newY = y * 2.f / m_WindowSizeY;
