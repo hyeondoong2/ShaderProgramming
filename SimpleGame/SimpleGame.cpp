@@ -15,10 +15,17 @@ but WITHOUT ANY WARRANTY.
 
 #include "Renderer.h"
 
-Renderer *g_Renderer = NULL;
+Renderer* g_Renderer = NULL;
+bool g_bNeedReloadShaderograms = false;
 
 void RenderScene(void)
 {
+	if (g_bNeedReloadShaderograms)
+	{
+		g_Renderer->ReloadAllShaderPrograms();
+		g_bNeedReloadShaderograms = false;
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
@@ -39,20 +46,29 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
-	RenderScene();
+
 }
 
 void KeyInput(unsigned char key, int x, int y)
 {
-	RenderScene();
+	switch (key)
+	{
+	case '1':
+		g_bNeedReloadShaderograms = true;
+		break;
+	case '2':
+		break;
+	default:
+		break;
+	}
 }
 
 void SpecialKeyInput(int key, int x, int y)
 {
-	RenderScene();
+
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	// Initialize GL things
 	glutInit(&argc, argv);
@@ -88,6 +104,6 @@ int main(int argc, char **argv)
 
 	delete g_Renderer;
 
-    return 0;
+	return 0;
 }
 
