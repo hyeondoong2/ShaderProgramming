@@ -95,8 +95,8 @@ void circleParticle()
        float t = fract(newTime / lifeTime) * lifeTime;
        float tt = t * t;
 
-       float x = sin(a_Value * 2 * c_PI);
-       float y = cos(a_Value * 2 * c_PI);
+       float x = cos(a_Value * 2 * c_PI);
+       float y = sin(a_Value * 2 * c_PI);
        float newX = x + 0.5 * c_G.x * tt;
        float newY = y + 0.5 * c_G.y * tt;
 
