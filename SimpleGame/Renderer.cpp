@@ -63,6 +63,10 @@ void Renderer::CompileAllShaderPrograms()
     m_GridMeshShader = CompileShaders(
         "./Shaders/GridMesh.vs",
         "./Shaders/GridMesh.fs");
+
+    m_FullScreenShader = CompileShaders(
+        "./Shaders/FullScreen.vs",
+        "./Shaders/FullScreen.fs");
 }
 
 void Renderer::DeleteAllShaderPrograms()
@@ -71,6 +75,7 @@ void Renderer::DeleteAllShaderPrograms()
 	glDeleteShader(m_TestShader);
 	glDeleteShader(m_ParticleShader);
 	glDeleteShader(m_GridMeshShader);
+	glDeleteShader(m_FullScreenShader);
 }
 
 
@@ -136,6 +141,17 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(testColor),
 		testColor, GL_STATIC_DRAW);
+
+    float FullRect[]
+        =
+    {
+        -1.f, -1.f , 0.f, -1.f, 1.f, 0.f, 1.f  , 1.f  , 0.f, //Triangle1
+        -1.f, -1.f, 0.f,  1.f, 1.f  , 0.f, 1.f  , -1.f  , 0.f, //Triangle2
+    };
+
+    glGenBuffers(1, &m_VBOFullScreen);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBOFullScreen);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(FullRect), FullRect, GL_STATIC_DRAW);
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -734,6 +750,32 @@ void Renderer::CreateGridMesh(int x, int y)
 	delete[] vertices;
 }
 
+void Renderer::DrawFullScreenColor(float r, float g, float b, float a)
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    int shader = m_FullScreenShader;
+
+    //Program select
+    glUseProgram(shader);
+
+    glUniform4f(glGetUniformLocation(shader, "u_Color"), r, g, b, a);
+
+    int attribPosition = glGetAttribLocation(shader, "a_Position");
+    glEnableVertexAttribArray(attribPosition);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBOFullScreen);
+    glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glDisableVertexAttribArray(attribPosition);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glDisable(GL_BLEND);
+}
+
 void Renderer::GridMesh()
 {
     m_time += 0.016;
@@ -752,7 +794,7 @@ void Renderer::GridMesh()
     glBindBuffer(GL_ARRAY_BUFFER, m_GridMeshVBO);
     glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
-    glDrawArrays(GL_LINE_STRIP, 0, m_GridMeshVertexCount);
+    glDrawArrays(GL_TRIANGLES, 0, m_GridMeshVertexCount);
 
     glDisableVertexAttribArray(attribPosition);
 
