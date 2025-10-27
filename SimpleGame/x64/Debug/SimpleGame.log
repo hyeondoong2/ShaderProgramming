@@ -1,2 +1,22 @@
-﻿  SimpleGame.cpp
+﻿  Renderer.cpp
+C:\Users\sally\OneDrive\바탕 화면\ShaderProgramming\ShaderProgramming\SimpleGame\Renderer.cpp(132,9): warning C4101: 'testID' :참조되지 않은 지역 변수입니다.
+  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sally\OneDrive\바탕 화면\ShaderProgramming\ShaderProgramming\SimpleGame\Renderer.cpp(316,17): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sally\OneDrive\바탕 화면\ShaderProgramming\ShaderProgramming\SimpleGame\Renderer.cpp(360,17): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sally\OneDrive\바탕 화면\ShaderProgramming\ShaderProgramming\SimpleGame\Renderer.cpp(496,56): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sally\OneDrive\바탕 화면\ShaderProgramming\ShaderProgramming\SimpleGame\Renderer.cpp(497,65): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sally\OneDrive\바탕 화면\ShaderProgramming\ShaderProgramming\SimpleGame\Renderer.cpp(798,20): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
+  
+  SimpleGame.cpp
+  코드를 생성하고 있습니다...
   SimpleGame.vcxproj -> C:\Users\sally\OneDrive\바탕 화면\ShaderProgramming\ShaderProgramming\x64\Debug\SimpleGame.exe

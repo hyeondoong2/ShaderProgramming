@@ -62,6 +62,7 @@ private:
     // Full Screen
     GLuint m_VBOFullScreen = 0;
     GLuint m_FullScreenShader = 0;
+    float m_Points[400]{};
 
 };
 

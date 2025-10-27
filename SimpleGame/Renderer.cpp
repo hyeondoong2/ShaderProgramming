@@ -33,6 +33,22 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	{
 		m_Initialized = true;
 	}
+
+    // 1021 Fill Points
+    int index = 0;
+    for (int i = 0; i < 400; i++)
+    {
+        float x = 2 * ((float)rand() / (float)RAND_MAX) - 1;
+        float y = 2 * ((float)rand() / (float)RAND_MAX) - 1;
+        float st = 10 * ((float)rand() / (float)RAND_MAX);
+        float lt = ((float)rand() / (float)RAND_MAX);
+        m_Points[index] = x; index++;
+        m_Points[index] = y; index++;
+        m_Points[index] = st; index++;
+        m_Points[index] = lt; index++;
+    }
+
+
 }
 
 bool Renderer::IsInitialized()
@@ -776,27 +792,35 @@ void Renderer::DrawFullScreenColor(float r, float g, float b, float a)
     glDisable(GL_BLEND);
 }
 
+
 void Renderer::GridMesh()
 {
-    m_time += 0.016;
+    m_time += 0.005;
 
-    //Program select
+    //1021
+    float points[12] = { 0,0,2,2,
+                   0.5,0,3,3,
+                   -0.5,0,4,4 };
+
     int shader = m_GridMeshShader;
     glUseProgram(shader);
 
-    int uTimeLoc = glGetUniformLocation(shader,
-        "u_Time");
+    int uTimeLoc = glGetUniformLocation(shader, "u_Time");
     glUniform1f(uTimeLoc, m_time);
+
+    // 1021 points를 array로 넣어서.. 전달
+    int uPointsLoc = glGetUniformLocation(shader, "u_Points");
+    glUniform4fv(uPointsLoc, 100, m_Points);   // uPoints가 array라서 glUniform4fv
+
 
     int attribPosition = glGetAttribLocation(shader, "a_Position");
     glEnableVertexAttribArray(attribPosition);
-
     glBindBuffer(GL_ARRAY_BUFFER, m_GridMeshVBO);
     glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
     glDrawArrays(GL_TRIANGLES, 0, m_GridMeshVertexCount);
+    //glDrawArrays(GL_LINE_STRIP, 0, m_GridMeshVertexCount);
 
     glDisableVertexAttribArray(attribPosition);
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
